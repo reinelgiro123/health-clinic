@@ -1,0 +1,167 @@
+<!-- 
+    Template for editing the User's core account information 
+    and role-specific profile (Patient or Doctor).
+    
+    Context variables:
+    - user_form: UserUpdateForm instance
+    - profile_form: PatientUpdateForm or DoctorUpdateForm instance (or None)
+    - is_patient: Boolean
+    - is_doctor: Boolean
+-->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    /* Custom styling for Django form fields (converted from @apply to standard CSS) */
+    /* We use form-control here, which is manually applied via JS below */
+    .form-control {
+        width: 100%;
+        padding: 0.5rem 0.75rem; /* px-3 py-2 */
+        border: 1px solid #d1d5db; /* border border-gray-300 */
+        border-radius: 0.5rem; /* rounded-lg */
+        outline: none;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        /* Override default browser focus rings */
+        --tw-ring-color: #4f46e5;
+    }
+    .form-control:focus {
+        border-color: #4f46e5; /* focus:ring-indigo-500 */
+        box-shadow: 0 0 0 2px var(--tw-ring-color), 0 0 #0000;
+    }
+    .errorlist {
+        color: #ef4444; /* text-red-500 */
+        font-size: 0.875rem; /* text-sm */
+        list-style: disc;
+        padding-left: 1.25rem; /* pl-5 */
+        margin-top: 0.25rem; /* mt-1 */
+    }
+</style>
+
+<div class="min-h-screen bg-gray-100 p-4 sm:p-8 flex justify-center items-start">
+    <div class="w-full max-w-4xl bg-white shadow-xl rounded-2xl p-6 sm:p-10 mt-10">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3">
+            Edit Profile
+        </h1>
+        
+        <!-- Messages Area (Tailwind-styled) -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-3 rounded-lg text-sm {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Non-field errors for User Form -->
+        {% if user_form.non_field_errors %}
+            <div class="p-3 rounded-lg text-sm bg-red-100 text-red-700 mb-4">
+                {{ user_form.non_field_errors }}
+            </div>
+        {% endif %}
+
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- ============================================== -->
+            <!-- SECTION 1: CORE USER ACCOUNT INFORMATION -->
+            <!-- ============================================== -->
+            <h2 class="text-xl font-semibold text-indigo-700 mb-4 pt-4 border-t mt-6">
+                Account Details (User)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Loop through fields from UserUpdateForm -->
+                {% for field in user_form %}
+                    <div class="space-y-1">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ field.label }}{% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- ============================================== -->
+            <!-- SECTION 2: ROLE-SPECIFIC PROFILE (PATIENT/DOCTOR) -->
+            <!-- ============================================== -->
+            {% if profile_form %}
+                <h2 class="text-xl font-semibold text-indigo-700 mb-4 pt-4 border-t mt-8">
+                    {% if is_patient %}Patient Profile{% else %}Doctor Profile{% endif %}
+                </h2>
+                
+                <!-- Non-field errors for Profile Form -->
+                {% if profile_form.non_field_errors %}
+                    <div class="p-3 rounded-lg text-sm bg-red-100 text-red-700 mb-4">
+                        {{ profile_form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Loop through fields from PatientUpdateForm or DoctorUpdateForm -->
+                    {% for field in profile_form %}
+                        <div class="space-y-1 {% if 'textarea' in field.widget_type %}md:col-span-2{% endif %}">
+                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                {{ field.label }}{% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% if field.help_text %}
+                                <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- ============================================== -->
+            <!-- SUBMIT BUTTON -->
+            <!-- ============================================== -->
+            <div class="mt-8 pt-6 border-t flex justify-end">
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-150 ease-in-out">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+        
+        <!-- Link to Password Change (Optional but helpful) -->
+        <div class="mt-6 text-center">
+            <a href="{% url 'password_change' %}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                Change Password &rarr;
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Ensure all standard form inputs (text, email, select, textarea) get the .form-control class for Tailwind styling
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('form input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]), form select, form textarea, form input[type="file"]');
+        forms.forEach(function(el) {
+            // Check if the element is not already a file input, or if it is a file input, ensure it still gets minimal styling if needed
+            if (el.type !== 'file' || !el.classList.contains('form-control')) {
+                el.classList.add('form-control');
+            }
+        });
+    });
+</script>
+{% endblock %}

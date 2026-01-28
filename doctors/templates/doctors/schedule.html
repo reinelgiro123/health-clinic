@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Doctor Schedule{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-calendar-week"></i> My Schedule</h2>
+    <hr>
+
+    {% if appointments %}
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Patient</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.appointment_date|date:"F d, Y" }}</td>
+                            <td>{{ appointment.appointment_time|time:"g:i A" }}</td>
+                            <td>{{ appointment.patient.user.get_full_name }}</td>
+                            <td>{{ appointment.reason }}</td>
+                            <td>
+                                <span class="badge bg-success">{{ appointment.get_status_display }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info mt-3">
+            <i class="bi bi-info-circle"></i> No appointments scheduled yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

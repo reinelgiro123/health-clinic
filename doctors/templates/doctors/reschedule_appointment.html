@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-primary">Reschedule Appointment</h2>
+
+  <form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="date" class="form-label">New Date</label>
+      <input type="date" name="date" id="date" class="form-control"
+             min="{{ today|date:'Y-m-d' }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="time" class="form-label">New Time</label>
+      <input type="time" name="time" id="time" class="form-control"
+             min="07:00" max="19:00" required>
+      <small class="text-muted">Available hours: 7:00 AM – 7:00 PM</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Reschedule</button>
+    <a href="{% url 'doctor_appointments' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

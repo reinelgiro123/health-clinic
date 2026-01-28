@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home - Health Clinic{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-4">Welcome to Health Clinic</h1>
+            <p class="lead">Your trusted healthcare partner. Book appointments easily and manage your health records securely.</p>
+            <div class="mt-4">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-2">
+                    <i class="bi bi-person-plus"></i> Register
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="https://via.placeholder.com/500x400" alt="Healthcare" class="img-fluid rounded">
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-md-4 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-calendar-plus display-4 text-primary"></i>
+                    <h5 class="card-title mt-3">Easy Booking</h5>
+                    <p class="card-text">Book appointments with your preferred doctors in just a few clicks.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-shield-check display-4 text-success"></i>
+                    <h5 class="card-title mt-3">Secure & Private</h5>
+                    <p class="card-text">Your health records are encrypted and stored securely.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="bi bi-clock-history display-4 text-info"></i>
+                    <h5 class="card-title mt-3">24/7 Access</h5>
+                    <p class="card-text">Manage your appointments anytime, anywhere.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

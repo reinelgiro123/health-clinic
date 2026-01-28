@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-danger">Cancel Appointment</h2>
+
+  <div class="card p-4 shadow-sm">
+    <p>Are you sure you want to cancel this appointment?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="reason" class="form-label">Reason for cancellation (optional):</label>
+        <textarea name="reason" id="reason" class="form-control" rows="3"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-danger">Yes, Cancel Appointment</button>
+      <a href="{% url 'doctor_appointments' %}" class="btn btn-secondary">Go Back</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

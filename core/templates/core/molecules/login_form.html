@@ -1,0 +1,20 @@
+<form method="POST" class="needs-validation" novalidate>
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        {% include 'core/atoms/label.html' with for_id="username" text="Username" required=True %}
+        {% include 'core/atoms/input.html' with id="username" name="username" required=True %}
+    </div>
+    
+    <div class="mb-3">
+        {% include 'core/atoms/label.html' with for_id="password" text="Password" required=True %}
+        {% include 'core/atoms/input.html' with type="password" id="password" name="password" required=True %}
+    </div>
+    
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+        <label class="form-check-label" for="remember">Remember me</label>
+    </div>
+    
+    {% include 'core/atoms/button.html' with type="submit" text="Login" icon="box-arrow-in-right" class="w-100" %}
+</form>

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>🔔 Notifications</h2>
+
+{% for note in notifications %}
+<div class="alert {% if note.is_read %}alert-secondary{% else %}alert-info{% endif %}">
+  <strong>{{ note.title }}</strong><br>
+  {{ note.message }}<br>
+  <small>{{ note.created_at|naturaltime }}</small><br>
+  {% if note.link %}
+    <a href="{{ note.link }}" class="btn btn-sm btn-outline-primary mt-1">View</a>
+  {% endif %}
+</div>
+{% empty %}
+<p>No notifications yet.</p>
+{% endfor %}
+{% endblock %}

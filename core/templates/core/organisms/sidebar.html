@@ -1,0 +1,69 @@
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+
+            {% if user.role == 'patient' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'patient_dashboard' %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'book_appointment' %}">
+                        <i class="bi bi-calendar-plus"></i> Book Appointment
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my_appointments' %}">
+                        <i class="bi bi-calendar-check"></i> My Appointments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'patient_profile' %}">
+                        <i class="bi bi-person"></i> My Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'change_password' %}">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </li>
+
+            {% elif user.role == 'doctor' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'doctor_dashboard' %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'doctor_appointments' %}">
+                        <i class="bi bi-calendar-check"></i> Appointments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'doctor_schedule' %}">
+                        <i class="bi bi-clock-history"></i> Schedule
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'doctor_profile' %}">
+                        <i class="bi bi-person"></i> My Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'change_password' %}">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </li>
+
+            {% elif user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/">
+                        <i class="bi bi-speedometer2"></i> Admin Panel
+                    </a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-calendar-plus"></i> Book New Appointment</h2>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="doctor" class="form-label">Select Doctor *</label>
+                    <select class="form-select" id="doctor" name="doctor" required>
+                        <option value="">Choose a doctor...</option>
+                        {% for doctor in doctors %}
+                            <option value="{{ doctor.id }}">
+                                Dr. {{ doctor.user.get_full_name }} - {{ doctor.specialization }} (Fee: ${{ doctor.consultation_fee }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="appointment_date" class="form-label">Appointment Date *</label>
+                        <input type="date" class="form-control" id="appointment_date" name="appointment_date" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="appointment_time" class="form-label">Appointment Time *</label>
+                        <input type="time" class="form-control" id="appointment_time" name="appointment_time" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="reason" class="form-label">Reason for Appointment *</label>
+                    <textarea class="form-control" id="reason" name="reason" rows="4" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Book Appointment
+                </button>
+                <a href="{% url 'patient_dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

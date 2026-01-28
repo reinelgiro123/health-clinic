@@ -1,0 +1,119 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Appointments{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-calendar-check"></i> My Appointments</h2>
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Appointment
+        </a>
+    </div>
+    
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by doctor name, specialization...">
+                </div>
+                <div class="col-md-6">
+                    <select class="form-select" id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4" id="appointmentsList">
+        {% if appointments %}
+            {% for appointment in appointments %}
+                <div class="card mb-3 appointment-item fade-in" data-status="{{ appointment.status }}">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="card-title">
+                                    <i class="bi bi-person-circle"></i> Dr. {{ appointment.doctor.user.get_full_name }}
+                                </h5>
+                                <p class="card-text">
+                                    <small class="text-muted">{{ appointment.doctor.specialization }}</small>
+                                </p>
+                                <p class="card-text">
+                                    <i class="bi bi-calendar-event"></i> {{ appointment.appointment_date|date:"F d, Y" }}
+                                    <i class="bi bi-clock ms-3"></i> {{ appointment.appointment_time|time:"g:i A" }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Reason:</strong> {{ appointment.reason }}
+                                </p>
+                                {% if appointment.notes %}
+                                <p class="card-text">
+                                    <strong>Doctor's Notes:</strong> {{ appointment.notes }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <span class="badge bg-{{ appointment.status }} mb-2">
+                                    {{ appointment.get_status_display }}
+                                </span>
+                                <br>
+                                {% if appointment.status == 'pending' or appointment.status == 'confirmed' %}
+                                    <a href="{% url 'cancel_appointment' appointment.id %}" 
+                                       class="btn btn-sm btn-outline-danger mt-2"
+                                       onclick="return confirmCancel('Are you sure you want to cancel this appointment?')">
+                                        <i class="bi bi-x-circle"></i> Cancel
+                                    </a>
+                                {% endif %}
+                                <button class="btn btn-sm btn-outline-secondary mt-2 no-print" onclick="printAppointment({{ appointment.id }})">
+                                    <i class="bi bi-printer"></i> Print
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> You have no appointments. <a href="{% url 'book_appointment' %}">Book your first appointment</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        filterAppointments();
+    });
+    
+    // Status filter functionality
+    document.getElementById('statusFilter').addEventListener('change', function() {
+        filterAppointments();
+    });
+    
+    function filterAppointments() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const statusValue = document.getElementById('statusFilter').value.toLowerCase();
+        const appointments = document.querySelectorAll('.appointment-item');
+        
+        appointments.forEach(appointment => {
+            const text = appointment.textContent.toLowerCase();
+            const status = appointment.getAttribute('data-status').toLowerCase();
+            
+            const matchesSearch = text.includes(searchValue);
+            const matchesStatus = statusValue === '' || status === statusValue;
+            
+            if (matchesSearch && matchesStatus) {
+                appointment.style.display = '';
+            } else {
+                appointment.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

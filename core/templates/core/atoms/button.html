@@ -1,0 +1,8 @@
+<button 
+    type="{{ type|default:'button' }}" 
+    class="btn btn-{{ variant|default:'primary' }} {{ class|default:'' }}"
+    {% if id %}id="{{ id }}"{% endif %}
+    {% if disabled %}disabled{% endif %}>
+    {% if icon %}<i class="bi bi-{{ icon }}"></i> {% endif %}
+    {{ text }}
+</button>

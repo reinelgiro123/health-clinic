@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">🔔 Notifications</h2>
+
+    {% if notifications %}
+        {% for note in notifications %}
+            <div class="alert alert-info" role="alert">
+                {% if note.title %}
+                    <strong>{{ note.title }}</strong><br>
+                {% endif %}
+                {{ note.message|default:"No message content." }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No notifications yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

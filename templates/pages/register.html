@@ -1,0 +1,124 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Register - Health Clinic{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h3 class="card-title text-center mb-4">
+                        <i class="bi bi-person-plus"></i> Register
+                    </h3>
+
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Role Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">I am a:</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="role" id="patient" value="patient" checked>
+                                    <label class="form-check-label" for="patient">Patient</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="role" id="doctor" value="doctor">
+                                    <label class="form-check-label" for="doctor">Doctor</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Information -->
+                        <h5>Account Information</h5>
+                        {% for field in user_form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field|add_class:"form-control"|attr:"required" }}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="form-text text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Patient Fields -->
+                        <div id="patient-fields">
+                            <hr>
+                            <h5>Patient Information</h5>
+                            {% for field in patient_form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field|add_class:"form-control" }}
+                                    {% for error in field.errors %}
+                                        <div class="form-text text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Doctor Fields -->
+                        <div id="doctor-fields" style="display: none;">
+                            <hr>
+                            <h5>Doctor Information</h5>
+                            {% for field in doctor_form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field|add_class:"form-control" }}
+                                    {% for error in field.errors %}
+                                        <div class="form-text text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3">
+                            <i class="bi bi-person-plus"></i> Register
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const patientFields = document.getElementById('patient-fields');
+    const doctorFields = document.getElementById('doctor-fields');
+
+    function toggleFields() {
+        const role = document.querySelector('input[name="role"]:checked').value;
+
+        if (role === 'doctor') {
+            doctorFields.style.display = 'block';
+            patientFields.style.display = 'none';
+            // Make doctor fields required
+            doctorFields.querySelectorAll('input, textarea').forEach(f => f.required = true);
+            patientFields.querySelectorAll('input, textarea').forEach(f => f.required = false);
+        } else {
+            doctorFields.style.display = 'none';
+            patientFields.style.display = 'block';
+            // Patient fields are optional (or required if you want)
+            doctorFields.querySelectorAll('input, textarea').forEach(f => f.required = false);
+            patientFields.querySelectorAll('input, textarea').forEach(f => f.required = false);
+        }
+    }
+
+    // Bind change events
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+        radio.addEventListener('change', toggleFields);
+    });
+
+    // Run on page load
+    window.addEventListener('DOMContentLoaded', toggleFields);
+</script>
+{% endblock %}

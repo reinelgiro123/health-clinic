@@ -1,0 +1,37 @@
+<form method="post">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="id_date" class="form-label">Date</label>
+    <input type="date"
+           id="id_date"
+           name="date"
+           class="form-control"
+           min="{{ today|date:'Y-m-d' }}"
+           value="{{ form.date.value|default:'' }}"
+           required>
+  </div>
+
+  <div class="mb-3">
+    <label for="id_time" class="form-label">Time</label>
+    <input type="time"
+           id="id_time"
+           name="time"
+           class="form-control"
+           min="07:00"
+           max="19:00"
+           value="{{ form.time.value|default:'' }}"
+           required>
+  </div>
+
+  <div class="mb-3">
+    <label for="id_reason" class="form-label">Reason</label>
+    <textarea id="id_reason"
+              name="reason"
+              class="form-control"
+              rows="3"
+              required>{{ form.reason.value|default:'' }}</textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Book Appointment</button>
+</form>

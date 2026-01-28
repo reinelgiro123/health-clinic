@@ -1,0 +1,23 @@
+<div class="position-relative">
+    <input 
+        type="{{ type|default:'text' }}" 
+        class="form-control {{ class|default:'' }}"
+        id="{{ id }}" 
+        name="{{ name }}" 
+        placeholder="{{ placeholder|default:'' }}"
+        {% if value %}value="{{ value }}"{% endif %}
+        {% if required %}required{% endif %}
+        {% if readonly %}readonly{% endif %}
+    >
+
+    {% if type == "password" %}
+        <span
+            onclick="togglePassword('{{ id }}', this)"
+            class="position-absolute top-50 end-0 translate-middle-y me-3"
+            style="cursor: pointer; user-select: none;"
+            title="Show / Hide Password"
+        >
+            👁️
+        </span>
+    {% endif %}
+</div>

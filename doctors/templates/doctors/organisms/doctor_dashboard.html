@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-speedometer2"></i> Doctor Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'doctor_profile' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-person-circle"></i> Edit Profile
+            </a>
+            <a href="{% url 'change_password' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-key"></i> Change Password
+            </a>
+        </div>
+        <a href="{% url 'doctor_schedule' %}" class="btn btn-primary">
+            <i class="bi bi-clock"></i> Manage Schedule
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Welcome, Dr. {{ user.get_full_name|default:user.username }}!</h4>
+        <p class="text-muted">{{ doctor.specialization }}</p>
+    </div>
+</div>
+
+{% include 'core/organisms/dashboard_section.html' %}
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h4>Recent Appointments</h4>
+        {% if appointments %}
+            {% for appointment in appointments %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="card-title">
+                                    <i class="bi bi-person"></i> {{ appointment.patient.user.get_full_name }}
+                                </h5>
+                                <p class="card-text">
+                                    <i class="bi bi-calendar-event"></i> {{ appointment.appointment_date|date:"F d, Y" }}
+                                    <i class="bi bi-clock ms-3"></i> {{ appointment.appointment_time|time:"g:i A" }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Reason:</strong> {{ appointment.reason }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <span class="badge bg-{{ appointment.status }} mb-2">
+                                    {{ appointment.get_status_display }}
+                                </span>
+                                <br>
+                                {% if appointment.status == 'pending' %}
+                                    <form method="POST" action="{% url 'update_appointment_status' appointment.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="confirmed">
+                                        <button type="submit" class="btn btn-sm btn-success mt-2">
+                                            <i class="bi bi-check-circle"></i> Confirm
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'update_appointment_status' appointment.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="submit" class="btn btn-sm btn-danger mt-2">
+                                            <i class="bi bi-x-circle"></i> Reject
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> No appointments scheduled yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
