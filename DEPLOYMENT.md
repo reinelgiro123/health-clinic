@@ -23,18 +23,7 @@ This project is configured to be deployed on [Render](https://render.com/) as a 
     *   **Start Command**: `gunicorn health_clinic.wsgi:application`
 4.  **Instance Type**:
     *   Select **Free** (or your preferred plan).
-5.  **Environment Variables**:
-    *   Click **Advanced** or scroll down to **Environment Variables**.
-    *   Add the following keys:
-
-    | Key | Value |
-    | :--- | :--- |
-    | `PYTHON_VERSION` | `3.9.0` (or your local version) |
-    | `SECRET_KEY` | Generate a random string (e.g. use an online generator) |
-    | `WEB_CONCURRENCY`| `4` |
-    | `DEBUG` | `False` |
-
-6.  **Deploy**:
+5.  **Deploy**:
     *   Click **Create Web Service**.
 
 ## Important Note on SQLite
