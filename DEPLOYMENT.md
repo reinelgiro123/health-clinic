@@ -17,16 +17,14 @@ This project is configured to be deployed on [Render](https://render.com/) using
     *   Render will automatically detect the `render.yaml` file.
     *   Give your blueprint a group name (e.g., `health-clinic-group`).
     *   Click **Apply**.
-4.  **Database Setup**:
-    *   The blueprint will automatically create a PostgreSQL database for you.
-    *   The `DATABASE_URL` will be automatically linked to your web service.
-5.  **Environment Variables**:
-    *   The blueprint automatically generates a `SECRET_KEY`.
-    *   If you need to customize other settings (like Email), go to the **Web Service** -> **Environment** tab and add the variables from `.env.example`.
+4.  **Done!**:
+    *   Render will build your web service and deploy it.
+    *   Since we are using **SQLite**, the database file will be created automatically.
+    *   **Note**: On Render's free tier (or without a persistent disk), specific files like the SQLite database will be reset if the service redeploys or restarts. This is fine for testing.
 
 ## Environment Variables Example
 
-Add these to your Render Web Service environment if needed:
+The `render.yaml` automatically sets up the keys. If you need to override them or add email settings:
 
 | Variable | Description | Default/Example |
 | :--- | :--- | :--- |

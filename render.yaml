@@ -5,15 +5,10 @@ services:
     buildCommand: ./build.sh
     startCommand: gunicorn health_clinic.wsgi:application
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: health-clinic-db
-          property: connectionString
+
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
 
-databases:
-  - name: health-clinic-db
-    plan: free
+
