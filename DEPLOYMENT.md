@@ -1,6 +1,6 @@
 # Deployment Instructions for Render
 
-This project is configured to be deployed on [Render](https://render.com/) using a Blueprint (`render.yaml`).
+This project is configured to be deployed on [Render](https://render.com/) as a **Web Service**.
 
 ## Prerequisites
 
@@ -10,31 +10,39 @@ This project is configured to be deployed on [Render](https://render.com/) using
 ## Step-by-Step Deployment
 
 1.  **Log in to Render**: Go to [dashboard.render.com](https://dashboard.render.com/).
-2.  **Create a New Blueprint**:
-    *   Click the **New** button and select **Blueprint**.
+2.  **Create a New Web Service**:
+    *   Click the **New +** button and select **Web Service**.
     *   Connect your GitHub account and select this repository.
 3.  **Configure the Service**:
-    *   Render will automatically detect the `render.yaml` file.
-    *   Give your blueprint a group name (e.g., `health-clinic-group`).
-    *   Click **Apply**.
-4.  **Done!**:
-    *   Render will build your web service and deploy it.
-    *   Since we are using **SQLite**, the database file will be created automatically.
-    *   **Note**: On Render's free tier (or without a persistent disk), specific files like the SQLite database will be reset if the service redeploys or restarts. This is fine for testing.
+    *   **Name**: `health-clinic` (or your preferred name).
+    *   **Region**: Select the region closest to you.
+    *   **Branch**: `main` (or your default branch).
+    *   **Root Directory**: Leave blank (unless your project is in a subdirectory).
+    *   **Runtime**: **Python 3**.
+    *   **Build Command**: `./build.sh`
+    *   **Start Command**: `gunicorn health_clinic.wsgi:application`
+4.  **Instance Type**:
+    *   Select **Free** (or your preferred plan).
+5.  **Environment Variables**:
+    *   Click **Advanced** or scroll down to **Environment Variables**.
+    *   Add the following keys:
 
-## Environment Variables Example
+    | Key | Value |
+    | :--- | :--- |
+    | `PYTHON_VERSION` | `3.9.0` (or your local version) |
+    | `SECRET_KEY` | Generate a random string (e.g. use an online generator) |
+    | `WEB_CONCURRENCY`| `4` |
+    | `DEBUG` | `False` |
 
-The `render.yaml` automatically sets up the keys. If you need to override them or add email settings:
+6.  **Deploy**:
+    *   Click **Create Web Service**.
 
-| Variable | Description | Default/Example |
-| :--- | :--- | :--- |
-| `DEBUG` | Set to `False` for production | `False` |
-| `ALLOWED_HOSTS` | Your custom domain (if any) | `yourdomain.com` |
-| `EMAIL_HOST` | SMTP server for emails | `smtp.gmail.com` |
-| `EMAIL_PORT` | SMTP port | `587` |
-| `EMAIL_USE_TLS` | Use TLS for email | `True` |
-| `EMAIL_HOST_USER` | Email address | `your-email@gmail.com` |
-| `EMAIL_HOST_PASSWORD`| App password | `your-app-password` |
+## Important Note on SQLite
+
+Since we are using **SQLite** (a file-based database) on Render's ephemeral filesystem:
+*   **Data Persistence**: If your Web Service restarts or is redeployed, **the database will be reset**, and you will lose all data (users, patients, appointments).
+*   **Testing**: This setup is perfect for testing and demos.
+*   **Production**: For a real production app, you should provision a managed PostgreSQL database on Render.
 
 ## Manual Build/Migration (If needed)
 
@@ -48,8 +56,8 @@ python manage.py migrate
 
 After deployment, you'll need to create a superuser to access the admin panel:
 
-1.  Go to the **Web Service** in your Render dashboard.
-2.  Click on the **Shell** tab.
+1.  Go to the **Web Service** dashboard.
+2.  Click on the **Shell** tab (available once the service is Live).
 3.  Run the following command:
     ```bash
     python manage.py createsuperuser
